@@ -3,7 +3,9 @@ package BBS.ANSI is
    --  Define constant escape sequences
    --
    esc : constant Character := Character'Val(27);
-   csi : constant String := esc & '[';
+   csi : constant String := esc & '[';  --  Control Sequence Introducer
+   dcs : constant String := esc & 'P';  --  Device Control String
+   osc : constant String := esc & ']';  --  Operating System Command
    --
    --  Character formatting codes
    --
@@ -71,8 +73,25 @@ package BBS.ANSI is
    --
    cls : constant String := csi & "H" & csi & "J";
    --
+   --  Request cursor position
+   --
+   reqPos : constant String := csi & "6n";
+   --
+   --  Request device attributes
+   --
+   reqAttr : constant String := csi & "0c";
+   --
    --  Position cursor
    --
-   function PosCursor(Line, Column : Natural) return String;
+   function posCursor(Line, Column : Natural) return String;
+   --
+   --  Get character or escape sequence
+   --
+   function getCharOrEscape return String;
+   --
+   --  Get the size of the terminal window.  Sets rows and cols to 0 if not
+   --  successful.
+   --
+   procedure getSize(rows : out Natural; cols : out Natural);
 
 end BBS.ANSI;
