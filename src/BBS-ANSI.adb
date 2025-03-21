@@ -14,6 +14,27 @@ package body BBS.ANSI is
         c(c'First + 1 .. c'Last) & 'H';
    end;
    --
+   --  Create a string that will draw a box on the screen
+   --
+   function drawBox(row, col, height, width : Natural) return String is
+      s : Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
+   begin
+      s := s & posCursor(row, col + 1);
+      for i in 1 .. width - 1 loop
+         s := s & '-';
+      end loop;
+      s := s & posCursor(row + height, col + 1);
+      for i in 1 .. width - 1 loop
+         s := s & '-';
+      end loop;
+      for i in row + 1 .. row + height - 1 loop
+         s := s & posCursor(i, col) & '|' & posCursor(i, col + width) & '|';
+      end loop;
+      s := s & posCursor(row, col) & '+' & posCursor(row, col + width) & '+';
+      s := s & posCursor(row + height, col) & '+' & posCursor(row + height, col + width) & '+';
+      return Ada.Strings.Unbounded.To_String(s);
+   end;
+   --
    --  Get character or escape sequence
    --
    --  This would be much more efficient if Ada.Text_IO.Get would return immediately

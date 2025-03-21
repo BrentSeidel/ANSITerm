@@ -60,10 +60,11 @@ package BBS.ANSI is
    --
    --  Colors
    --
-   red   : constant String := csi & chBold & ";" & fgRed & chMode;
-   blue  : constant String := csi & chBold & ";" & fgBlue & chMode;
-   green : constant String := csi & chBold & ";" & fgGreen & chMode;
-   white : constant String := csi & chBold & ";" & fgWhite & chMode;
+   red    : constant String := csi & chBold & ";" & fgRed & chMode;
+   blue   : constant String := csi & chBold & ";" & fgBlue & chMode;
+   green  : constant String := csi & chBold & ";" & fgGreen & chMode;
+   yellow : constant String := csi & chBold & ";" & fgYellow & chMode;
+   white  : constant String := csi & chBold & ";" & fgWhite & chMode;
    --
    --  Reset formatting
    --
@@ -84,6 +85,10 @@ package BBS.ANSI is
    --  Position cursor
    --
    function posCursor(Line, Column : Natural) return String;
+   --
+   --  Create a string that will draw a box on the screen
+   --
+   function drawBox(row, col, height, width : Natural) return String;
    --
    --  Get character or escape sequence
    --
