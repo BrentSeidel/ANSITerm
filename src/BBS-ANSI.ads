@@ -1,5 +1,11 @@
 package BBS.ANSI is
    --
+   --  Recognized terminal types.  This may be extended as more types are recognized.
+   --
+   type term_type is (unknown, VT100, VT101, VT102, VT125, VT131, VT132, VT220,
+                      VT240, VT320, VT330, VT340, VT382, VT420, VT510, VT520,
+                      VT525);
+   --
    --  Define constant escape sequences
    --
    esc : constant Character := Character'Val(27);
@@ -100,5 +106,9 @@ package BBS.ANSI is
    --  successful.
    --
    procedure getSize(rows : out Natural; cols : out Natural);
+   --
+   --  Try and identify the terminal
+   --
+   function identify return term_type;
 
 end BBS.ANSI;
