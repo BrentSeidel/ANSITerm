@@ -60,11 +60,13 @@ package BBS.ANSI is
    --
    --  Colors
    --
-   red    : constant String := csi & chBold & ";" & fgRed & chMode;
-   blue   : constant String := csi & chBold & ";" & fgBlue & chMode;
-   green  : constant String := csi & chBold & ";" & fgGreen & chMode;
-   yellow : constant String := csi & chBold & ";" & fgYellow & chMode;
-   white  : constant String := csi & chBold & ";" & fgWhite & chMode;
+   red     : constant String := csi & chBold & ";" & fgRed & chMode;
+   blue    : constant String := csi & chBold & ";" & fgBlue & chMode;
+   green   : constant String := csi & chBold & ";" & fgGreen & chMode;
+   yellow  : constant String := csi & chBold & ";" & fgYellow & chMode;
+   cyan    : constant String := csi & chBold & ";" & fgCyan & chMode;
+   Magenta : constant String := csi & chBold & ";" & fgMagenta & chMode;
+   white   : constant String := csi & chBold & ";" & fgWhite & chMode;
    --
    --  Reset formatting
    --
@@ -92,7 +94,7 @@ package BBS.ANSI is
    --
    --  Get character or escape sequence
    --
-   function getCharOrEscape return String;
+   function getCharOrEscape(d : Duration) return String;
    --
    --  Get the size of the terminal window.  Sets rows and cols to 0 if not
    --  successful.

@@ -1,3 +1,5 @@
+with Ada.Calendar;
+use type Ada.Calendar.Time;
 with Ada.Strings.Unbounded;
 use type Ada.Strings.Unbounded.Unbounded_String;
 with Ada.Text_IO;
@@ -41,13 +43,18 @@ package body BBS.ANSI is
    --  if a character is present rather than waiting for a complete line to be
    --  entered.
    --
-   function getCharOrEscape return String is
+   function getCharOrEscape(d : Duration) return String is
       c : Character;
       r : Boolean := False;
       s : Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
+      limit : constant Ada.Calendar.Time := Ada.Calendar.Clock + d;
    begin
+
       while not r loop
          Ada.Text_IO.Get_Immediate(c, r);
+         if Ada.Calendar.Clock > limit then
+            return "";
+         end if;
       end loop;
       if Character'Pos(c) /= 27 then  --  Check if an escape character
          return c & "";               --  If not, just return it
@@ -56,6 +63,9 @@ package body BBS.ANSI is
          r := False;
          while not r loop
             Ada.Text_IO.Get_Immediate(c, r);
+         if Ada.Calendar.Clock > limit then
+            return "";
+         end if;
          end loop;
          s := s & c;
          --
@@ -85,7 +95,7 @@ package body BBS.ANSI is
       Ada.Text_IO.Put(BBS.ANSI.posCursor(9999,9999));
       Ada.Text_IO.Put(BBS.ANSI.reqPos);
       declare
-         t : constant String := BBS.ANSI.getCharOrEscape;
+         t : constant String := BBS.ANSI.getCharOrEscape(1.0);
       begin
          s := Ada.Strings.Unbounded.To_Unbounded_String(t);
       end;
