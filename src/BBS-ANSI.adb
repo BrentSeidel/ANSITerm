@@ -18,22 +18,39 @@ package body BBS.ANSI is
    --
    --  Create a string that will draw a box on the screen
    --
-   function drawBox(row, col, height, width : Natural) return String is
+   function drawBox(row, col, height, width : Natural; line : Boolean) return String is
       s : Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
    begin
       s := s & posCursor(row, col + 1);
-      for i in 1 .. width - 1 loop
-         s := s & '-';
-      end loop;
-      s := s & posCursor(row + height, col + 1);
-      for i in 1 .. width - 1 loop
-         s := s & '-';
-      end loop;
-      for i in row + 1 .. row + height - 1 loop
-         s := s & posCursor(i, col) & '|' & posCursor(i, col + width) & '|';
-      end loop;
-      s := s & posCursor(row, col) & '+' & posCursor(row, col + width) & '+';
-      s := s & posCursor(row + height, col) & '+' & posCursor(row + height, col + width) & '+';
+      if line then
+         s := s & so;
+         for i in 1 .. width - 1 loop
+            s := s & 'q';
+         end loop;
+         s := s & posCursor(row + height, col + 1);
+         for i in 1 .. width - 1 loop
+            s := s & 'q';
+         end loop;
+         for i in row + 1 .. row + height - 1 loop
+            s := s & posCursor(i, col) & 'x' & posCursor(i, col + width) & 'x';
+         end loop;
+         s := s & posCursor(row, col) & 'l' & posCursor(row, col + width) & 'k';
+         s := s & posCursor(row + height, col) & 'm' & posCursor(row + height, col + width) & 'j';
+         s := s & si;
+      else
+         for i in 1 .. width - 1 loop
+            s := s & '-';
+         end loop;
+         s := s & posCursor(row + height, col + 1);
+         for i in 1 .. width - 1 loop
+            s := s & '-';
+         end loop;
+         for i in row + 1 .. row + height - 1 loop
+            s := s & posCursor(i, col) & '|' & posCursor(i, col + width) & '|';
+         end loop;
+         s := s & posCursor(row, col) & '+' & posCursor(row, col + width) & '+';
+         s := s & posCursor(row + height, col) & '+' & posCursor(row + height, col + width) & '+';
+      end if;
       return Ada.Strings.Unbounded.To_String(s);
    end;
    --

@@ -6,12 +6,32 @@ package BBS.ANSI is
                       VT240, VT320, VT330, VT340, VT382, VT420, VT510, VT520,
                       VT525);
    --
+   --  Define single character control characters
+   --
+   bell : constant Character := Character'Val(7);   --  Ctrl-G ring bell
+   bs   : constant Character := Character'Val(8);   --  Ctrl-H backspace
+   tab  : constant Character := Character'Val(9);   --  Ctrl-I backspace
+   lf   : constant Character := Character'Val(10);  --  Ctrl-J line feed
+   cr   : constant Character := Character'Val(13);  --  Ctrl-M carriage return
+   so   : constant Character := Character'Val(14);  --  Ctrl-N shift out
+   si   : constant Character := Character'Val(15);  --  Ctrl-O shift in
+   --
    --  Define constant escape sequences
    --
    esc : constant Character := Character'Val(27);
    csi : constant String := esc & '[';  --  Control Sequence Introducer
    dcs : constant String := esc & 'P';  --  Device Control String
    osc : constant String := esc & ']';  --  Operating System Command
+   --
+   --  Select character sets.  There are several more that are not supported by
+   --  the VT100.
+   --
+   g0_uk  : constant String := esc & "(A";
+   g0_us  : constant String := esc & "(B";
+   g0_sym : constant String := esc & "(0";
+   g1_uk  : constant String := esc & ")A";
+   g1_us  : constant String := esc & ")B";
+   g1_sym : constant String := esc & ")0";
    --
    --  Character formatting codes
    --
@@ -94,9 +114,10 @@ package BBS.ANSI is
    --
    function posCursor(Line, Column : Natural) return String;
    --
-   --  Create a string that will draw a box on the screen
+   --  Create a string that will draw a box on the screen.  If line is true, it
+   --  will use the DEC line drawing characters.
    --
-   function drawBox(row, col, height, width : Natural) return String;
+   function drawBox(row, col, height, width : Natural; line : Boolean) return String;
    --
    --  Get character or escape sequence
    --
