@@ -35,10 +35,10 @@ begin
       Ada.Text_IO.Put(BBS.ANSI.csi & BBS.ANSI.bgBlack & BBS.ANSI.chMode);
    end if;
    Ada.Text_IO.Put(BBS.ANSI.drawBox(2, 1, rows - 3, cols - 1, True));
-   Ada.Text_IO.Put(BBS.ANSI.so & BBS.ANSI.posCursor(23, 1) & 'n' & BBS.ANSI.posCursor(23, cols) &
-                     'u' & BBS.ANSI.si);
+   Ada.Text_IO.Put(BBS.ANSI.so & BBS.ANSI.posCursor(23, 1) & BBS.ANSI.symLeftT & BBS.ANSI.posCursor(23, cols) &
+                     BBS.ANSI.symRightT & BBS.ANSI.si);
    for i in 2 .. cols - 1 loop
-      Ada.Text_IO.Put(BBS.ANSI.posCursor(23, i) & BBS.ANSI.so & BBS.ANSI.white & 'q' & BBS.ANSI.si);
+      Ada.Text_IO.Put(BBS.ANSI.posCursor(23, i) & BBS.ANSI.so & BBS.ANSI.white & BBS.ANSI.symHoriz & BBS.ANSI.si);
       x := Float(i)*0.1;
       y1 := Ada.Numerics.Elementary_Functions.Sin(x)*20.0;
       Ada.Text_IO.Put(BBS.ANSI.posCursor(23 - Integer(y1), i) & BBS.ANSI.blue & '*');

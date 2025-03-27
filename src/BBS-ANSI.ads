@@ -33,6 +33,32 @@ package BBS.ANSI is
    g1_us  : constant String := esc & ")B";
    g1_sym : constant String := esc & ")0";
    --
+   --  Line drawing characters and symbols
+   --
+   symHoriz    : constant Character := 'q';
+   symVert     : constant Character := 'x';
+   symLeftT    : constant Character := 't';
+   symRightT   : constant Character := 'u';
+   symUpperT   : constant Character := 'w';
+   symLowerT   : constant Character := 'v';
+   symCornerUL : constant Character := 'l';
+   symCornerUR : constant Character := 'k';
+   symCornerLL : constant Character := 'm';
+   symCornerLR : constant Character := 'j';
+   symCross    : constant Character := 'n';
+   symHT       : constant Character := 'b';
+   symFF       : constant Character := 'c';
+   symCR       : constant Character := 'd';
+   symLF       : constant Character := 'e';
+   symDegree   : constant Character := 'f';
+   symPlusMin  : constant Character := 'g';
+   symNL       : constant Character := 'h';
+   symVT       : constant Character := 'i';
+   symLE       : constant Character := 'y';
+   symGE       : constant Character := 'z';
+   symPi       : constant Character := '{';
+   symNE       : constant Character := '|';
+   --
    --  Character formatting codes
    --
    --  Mode character

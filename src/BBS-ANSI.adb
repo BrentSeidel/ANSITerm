@@ -25,17 +25,17 @@ package body BBS.ANSI is
       if line then
          s := s & so;
          for i in 1 .. width - 1 loop
-            s := s & 'q';
+            s := s & symHoriz;
          end loop;
          s := s & posCursor(row + height, col + 1);
          for i in 1 .. width - 1 loop
-            s := s & 'q';
+            s := s & symHoriz;
          end loop;
          for i in row + 1 .. row + height - 1 loop
-            s := s & posCursor(i, col) & 'x' & posCursor(i, col + width) & 'x';
+            s := s & posCursor(i, col) & symVert & posCursor(i, col + width) & symVert;
          end loop;
-         s := s & posCursor(row, col) & 'l' & posCursor(row, col + width) & 'k';
-         s := s & posCursor(row + height, col) & 'm' & posCursor(row + height, col + width) & 'j';
+         s := s & posCursor(row, col) & symCornerUL & posCursor(row, col + width) & symCornerUR;
+         s := s & posCursor(row + height, col) & symCornerLL & posCursor(row + height, col + width) & symCornerLR;
          s := s & si;
       else
          for i in 1 .. width - 1 loop
