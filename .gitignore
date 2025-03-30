@@ -5,3 +5,15 @@
 
 # Ada Library Information
 *.ali
+#
+#  LaTeX intermediate files
+#
+docs/*.aux
+docs/*.bbl
+docs/*.blg
+docs/*.log
+docs/*.toc
+docs/*.idx
+docs/*.ilg
+docs/*.ind
+docs/*.synctex.gz

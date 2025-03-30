@@ -16,7 +16,8 @@ package body BBS.ANSI is
         c(c'First + 1 .. c'Last) & 'H';
    end;
    --
-   --  Create a string that will draw a box on the screen
+   --  Create a string that will draw a box on the screen.  Setting line to True
+   --  will use the VT100 line drawing characters.
    --
    function drawBox(row, col, height, width : Natural; line : Boolean) return String is
       s : Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
@@ -51,6 +52,18 @@ package body BBS.ANSI is
          s := s & posCursor(row, col) & '+' & posCursor(row, col + width) & '+';
          s := s & posCursor(row + height, col) & '+' & posCursor(row + height, col + width) & '+';
       end if;
+      return Ada.Strings.Unbounded.To_String(s);
+   end;
+   --
+   --  Fill a box with a specific character
+   --
+   function fillBox(row, col, height, width : Natural; c : Character) return String is
+      s : Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
+      f : Ada.Strings.Unbounded.Unbounded_String := (width - 1) * c;
+   begin
+      for i in row + 1 .. row + height - 1 loop
+         s := s & posCursor(i, col + 1) & f;
+      end loop;
       return Ada.Strings.Unbounded.To_String(s);
    end;
    --
@@ -128,6 +141,7 @@ package body BBS.ANSI is
             rows := Natural'Value(r);
             cols := Natural'Value(c);
          end;
+      Ada.Text_IO.Put(posCursor(rows,1));
       else
          rows := 0;
          cols := 0;
@@ -141,16 +155,16 @@ package body BBS.ANSI is
    --    n1 - Is device type
    --    n2 - Is (possible multiple) device attributes.
    --
-   --  CSI ? 1 ; 0 c  ("VT101 with No Options")
-   --  CSI ? 1 ; 2 c  ("VT100 with Advanced Video Option")
-   --  CSI ? 4 ; 6 c  ("VT132 with Advanced Video and Graphics")
-   --  CSI ? 6 c  ("VT102")
-   --  CSI ? 7 c  ("VT131")
-   --  CSI ? 12 ; Ps c  ("VT125")
-   --  CSI ? 62 ; Ps c  ("VT220")
-   --  CSI ? 63 ; Ps c  ("VT320")
-   --  CSI ? 64 ; Ps c  ("VT420")
-   --  CSI ? 65 ; Ps c  ("VT510" to ("VT525")
+   --  CSI ? 1 ; 0 c    VT101 with No Options
+   --  CSI ? 1 ; 2 c    VT100 with Advanced Video Option
+   --  CSI ? 4 ; 6 c    VT132 with Advanced Video and Graphics
+   --  CSI ? 6 c        VT102
+   --  CSI ? 7 c        VT131
+   --  CSI ? 12 ; Ps c  VT125
+   --  CSI ? 62 ; Ps c  VT220
+   --  CSI ? 63 ; Ps c  VT320
+   --  CSI ? 64 ; Ps c  VT420
+   --  CSI ? 65 ; Ps c  VT510 to VT525
    --
    --  SDA is secondary device attributes.  Return is
    --  CSI > n1 ; n2 ; n3 c
@@ -158,17 +172,17 @@ package body BBS.ANSI is
    --    n2 - Firmware version
    --    n3 - ROM cartridge registration number (always zero)
    --
-   --   n1 = 0  => "VT100".
-   --   n1 = 1  => "VT220".
-   --   n1 = 2  => "VT240" or "VT241".
-   --   n1 = 18 => "VT330".
-   --   n1 = 19 => "VT340".
-   --   n1 = 24 => "VT320".
-   --   n1 = 32 => "VT382".
-   --   n1 = 41 => "VT420".
-   --   n1 = 61 => "VT510".
-   --   n1 = 64 => "VT520".
-   --   n1 = 65 => "VT525".
+   --   n1 = 0  => VT100.
+   --   n1 = 1  => VT220.
+   --   n1 = 2  => VT240 or VT241.
+   --   n1 = 18 => VT330.
+   --   n1 = 19 => VT340.
+   --   n1 = 24 => VT320.
+   --   n1 = 32 => VT382.
+   --   n1 = 41 => VT420.
+   --   n1 = 61 => VT510.
+   --   n1 = 64 => VT520.
+   --   n1 = 65 => VT525.
    --
    function identify return term_type is
       pda : constant String := CSI & "0c";

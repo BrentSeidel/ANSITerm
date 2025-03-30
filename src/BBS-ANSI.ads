@@ -24,7 +24,7 @@ package BBS.ANSI is
    osc : constant String := esc & ']';  --  Operating System Command
    --
    --  Select character sets.  There are several more that are not supported by
-   --  the VT100.
+   --  the VT100.  Some later terminals also support G2 and G3 character sets.
    --
    g0_uk  : constant String := esc & "(A";
    g0_us  : constant String := esc & "(B";
@@ -110,7 +110,7 @@ package BBS.ANSI is
    --  Useful constant sequences
    --
    --
-   --  Colors
+   --  Colors.  chBold is included to make the colors brighter.
    --
    red     : constant String := csi & chBold & ";" & fgRed & chMode;
    blue    : constant String := csi & chBold & ";" & fgBlue & chMode;
@@ -136,6 +136,10 @@ package BBS.ANSI is
    --
    reqAttr : constant String := csi & "0c";
    --
+   --  Functions and proceedures.
+   --  The functions generally use strings that can be put to the terminal or saved
+   --  for later use.
+   --
    --  Position cursor
    --
    function posCursor(Line, Column : Natural) return String;
@@ -144,6 +148,10 @@ package BBS.ANSI is
    --  will use the DEC line drawing characters.
    --
    function drawBox(row, col, height, width : Natural; line : Boolean) return String;
+   --
+   --  Fill a box with a specific character
+   --
+   function fillBox(row, col, height, width : Natural; c : Character) return String;
    --
    --  Get character or escape sequence
    --
