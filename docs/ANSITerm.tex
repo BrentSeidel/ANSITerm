@@ -103,7 +103,7 @@ This document is \copyright 2025, Brent Seidel.  All rights reserved.
 \chapter{Introduction}
 
 \section{About the Project}
-The intent of this project is to provide assistance in generating ANSI escape sequences for enhancing terminal interfaces.  Most of these are done using string constants, but a few functions and procedures are also defined.
+The intent of this project is to provide assistance in generating ANSI escape sequences for enhancing terminal interfaces.  Most of these are done using string constants, but a few functions and procedures are also defined.  In most cases the lowest common denominator (\constant{VT100}) is targeted, but the VT100 does not support colors.  These routines have been testing using the MacOS terminal program that reports as \constant{VT100} and xTerm from the XQuartz package, which reports as \constant{VT420}.
 
 \section{License}
 This project is licensed using the GNU General Public License V3.0.  Should you wish other licensing terms, contact the author.
@@ -137,11 +137,180 @@ This is a library of routines intended to be used by some program.  To use these
 
 %========================================================
 \chapter{API Description}
-\comment{If the project does not have a public API, this chapter can be omitted.  Otherwise include an API description here.  This would include packages, data types, routines to call, how to instantiate generics, and anything else that would be valuable to someone using the project.}
+There are some functions and procedures, but most of the contents is in the form of constant strings that can either be output or concatenated with other strings to achieve the desired effect.
 
-%========================================================
-\chapter{User Interface}
-\comment{If there is no user interface, this chapter can be omitted.  Otherwise, if the project has a user interface, put instructions in this chapter.}
+\subsection{Datatypes}
+There is a routine that sends escape sequences to the terminal to try and identify what kind of terminal it is.  The result is a member of the \datatype{term\_type} enumeration.  The possible results are:
+\begin{itemize}
+  \item \constant{unknown} -- Terminal type could not be determined
+  \item \constant{VT100}
+  \item \constant{VT101}
+  \item \constant{VT102}
+  \item \constant{VT125}
+  \item \constant{VT131}
+  \item \constant{VT132}
+  \item \constant{VT220}
+  \item \constant{VT240}
+  \item \constant{VT320}
+  \item \constant{VT330}
+  \item \constant{VT340}
+  \item \constant{VT382}
+  \item \constant{VT420}
+  \item \constant{VT510}
+  \item \constant{VT520}
+  \item \constant{VT525}
+\end{itemize}
+
+\section{Constant Strings}
+\subsection{Single Character Control Characters}
+Constants have been defined for some of the single character control characters:
+\begin{itemize}
+  \item \constant{bell} -- Ctrl-G, ring terminal bell
+  \item \constant{bs} -- Ctrl-H, backspace
+  \item \constant{tab} -- Ctrl-I, tab
+  \item \constant{lf} -- Ctrl-J, line feed
+  \item \constant{cr} -- Ctrl-M, carriage return
+  \item \constant{so} -- Ctrl-N, shift out, used to select the G1 character set
+  \item \constant{si} -- Ctrl-O, shift in, used to select the G0 character set
+\end{itemize}
+
+\subsection{Escape and Escape Sequence Prefixes}
+\begin{itemize}
+  \item \constant{esc} -- The escape character
+  \item \constant{csi} -- Control Sequence Introducer(ESC [)
+  \item \constant{dcs} -- Device Control String (ESC P)
+  \item \constant{osc} -- Operating System Command (ESC ])
+\end{itemize}
+
+ \subsection{Select Character Set}
+There are several more that are not supported by the VT100.  Some later terminals also support G2 and G3 character sets.
+\begin{itemize}
+  \item \constant{g0\_uk} -- Select the UK character set for G0
+  \item \constant{g0\_us} -- Select the US character set for G0
+  \item \constant{g0\_sym} -- Select the symbol and line drawing character set for G0
+  \item \constant{g1\_uk} -- Select the UK character set for G1
+  \item \constant{g1\_us} -- Select the US character set for G1
+  \item \constant{g1\_sym} -- Select the symbol and line drawing character set for G1
+\end{itemize}
+
+\subsection{VT100 Symbols and Line Drawing Characters}
+There are a few symbols that are not included in this list.  They may be added later.
+\begin{itemize}
+  \item \constant{symHoriz} -- Horizontal line
+  \item \constant{symVert} -- Vertical line
+  \item \constant{symLeftT} -- Left side T intersection
+  \item \constant{symRightT} -- Right side T intersection
+  \item \constant{symUpperT} -- Upper T intersection
+  \item \constant{symLowerT} -- Lower T intersection
+  \item \constant{symCornerUL} -- Upper left corner
+  \item \constant{symCornerUR} -- Upper right corner
+  \item \constant{symCornerLL} -- Lower left corner
+  \item \constant{symCornerLR} -- Lower right corner
+  \item \constant{symCross} -- Horizontal and vertical line crossing
+  \item \constant{symHT} -- Symbol for horizontal tab (HT)
+  \item \constant{symFF} -- Symbol for form feed (FF)
+  \item \constant{symCR} -- Symbol for carriage return (CR)
+  \item \constant{symLF} -- Symbol for line feed (LF)
+  \item \constant{symDegree} -- Degree symbol ($\degree$)
+  \item \constant{symPlusMin} -- Plus or minus symbol ($\pm$)
+  \item \constant{symNL} -- Symbol for null (NL)
+  \item \constant{symVT} -- Symbol for vertical tab (VT)
+  \item \constant{symLE} -- Symbol for less than or equals ($\leq$)
+  \item \constant{symGE} -- Symbol for greater than or equals ($\geq$)
+  \item \constant{symPi} -- Symbol for Pi ($\pi$)
+  \item \constant{symNE} -- Symbol for not equals ($\neq$)
+\end{itemize}
+
+\subsection{Character Formatting Codes}
+These constants will need to be concatenated together to create an escape sequence for the desired format.  The format of a character mode escape sequence is:
+  \constant{csi} format1 ; format2 ; ... ; formatn \constant{chMode}.
+  \begin{itemize}
+    \item \constant{chMode} -- Terminates a format escape sequence
+  \item \constant{chReset} -- Resets all formatting to default
+  \item \constant{chBold} -- Set boldface formatting
+  \item \constant{chDim} -- Set dim formatting
+  \item \constant{chItalic} -- Set italic formatting
+  \item \constant{chUnderline} -- Set underline formatting
+  \item \constant{chBlink} -- Set blink formatting
+  \item \constant{chInverse} -- Set inverse video formatting
+  \item \constant{chHidden} -- Set hidden formatting
+  \item \constant{chStrike} -- Set strikethrough formatting
+  \item \constant{chNoBold} -- Clears bold (and probably dim) formatting
+  \item \constant{chNoDim} -- Clears dim (and probably bold) formatting
+  \item \constant{chNoItalic} -- Clears italic formatting
+  \item \constant{chNoUnderline} -- Clears underline formatting
+  \item \constant{chNoBlink} -- Clears blinking
+  \item \constant{chNoInverse} -- Clears inverse video
+  \item \constant{chNoHidden} -- Clears hidden formatting
+  \item \constant{chNoStrike} -- Clears strikethrough formatting
+  \item \constant{fgBlack} -- Set foreground color to Black
+  \item \constant{fgRed} -- Set foreground color to Red
+  \item \constant{fgGreen} -- Set foreground color to Green
+  \item \constant{fgYellow} -- Set foreground color to Yellow
+  \item \constant{fgBlue} -- Set foreground color to Blue
+  \item \constant{fgMagenta} -- Set foreground color to Magenta
+  \item \constant{fgCyan} -- Set foreground color to Cyan
+  \item \constant{fgWhite} -- Set foreground color to White
+  \item \constant{fgDefault} -- Set foreground color to the default color
+  \item \constant{bgBlack} -- Set the background color to Black
+  \item \constant{bgRed} -- Set the background color to Red
+  \item \constant{bgGreen} -- Set the background color to Green
+  \item \constant{bgYellow} -- Set the background color to Yellow
+  \item \constant{bgBlue} -- Set the background color to Blue
+  \item \constant{bgMagenta} -- Set the background color to Magenta
+  \item \constant{bgCyan} -- Set the background color to Cyan
+  \item \constant{bgWhite} -- Set the background color to White
+  \item \constant{bgDefault} -- Set the background color to the default color
+\end{itemize}
+There are additional color sequences for bright colors, 256 color and RBG color sequences that have not been added here.  They may be added at some point.  It may also be simpler to use a function to generate some of these color sequences.
+
+\subsection{Useful Sequences}
+These are complete escape sequences and do not need to combined to build an escape sequence.
+\begin{itemize}
+  \item \constant{red} -- Set text foreground color to bold red
+  \item \constant{blue} -- Set text foreground color to bold blue
+  \item \constant{green} -- Set text foreground color to bold green
+  \item \constant{yellow} -- Set text foreground color to bold yellow
+  \item \constant{cyan} -- Set text foreground color to bold cyan
+  \item \constant{magenta} -- Set text foreground color to bold magenta
+  \item \constant{white} -- Set text foreground color to bold white
+  \item \constant{rst} -- Reset all text formatting to default
+  \item \constant{cls} -- Move the cursor to the home (top left) position and clear the screen
+  \item \constant{reqPos} -- Request the current cursor position (intended for use in a function)
+  \item \constant{reqAttr} -- Request the primary device attributes (intended for use in a function)
+\end{itemize}
+
+\section{Functions and Procedures}
+
+Returns a \datatype{String} that contains an escape sequence to position the cursor to the specified line (or row) and column.  The top left corner is position (1,1) and rows increase downwards and columns increase rightward.
+\begin{lstlisting}
+function posCursor(Line, Column : Natural) return String;
+\end{lstlisting}
+
+Returns a \datatype{String} that will draw a box on the screen.  If the parameter \keyword{line} is true, the box will use the DEC line drawing characters, otherwise dashes, vertical bars, and plus signs will be used.
+\begin{lstlisting}
+function drawBox(row, col, height, width : Natural; line : Boolean) return String;
+\end{lstlisting}
+
+Returns a \datatype{String} that will fill a box with the character specified in \keyword{c}.  The box parameters are the same for the \function{drawBox} function.
+\begin{lstlisting}
+function fillBox(row, col, height, width : Natural; c : Character) return String;
+\end{lstlisting}
+
+Returns a \datatype{String} containing the entered character or escape sequence.  The parameter \keyword{d} contains a duration.  If the duration expires with no characters entered, an empty string is entered.
+\begin{lstlisting}
+function getCharOrEscape(d : Duration) return String;
+\end{lstlisting}
+
+Attempts to determine the size of the terminal window (or actual terminal if connected to a physical terminal).  This is done by setting the cursor to row and column 9999 and requesting the current cursor position.  If no position can be determined, \keyword{rows} and \keyword{cols} will be set to 0.
+\begin{lstlisting}
+procedure getSize(rows : out Natural; cols : out Natural);
+\end{lstlisting}
+
+Attempts to identify the terminal type.  Returns a value of \datatype{term\_type}.  If no type can be determined, \constant{unknown} is returned.
+\begin{lstlisting}
+function identify return term_type;
+\end{lstlisting}
 
 %========================================================
 \chapter{Other Stuff}
@@ -166,4 +335,4 @@ This is a library of routines intended to be used by some program.  To use these
 \bibliographystyle{plain}
 \bibliography{ANSITerm.bib}
 
-\end{document}
+\end{document}  \item \constant{  \item \constant{

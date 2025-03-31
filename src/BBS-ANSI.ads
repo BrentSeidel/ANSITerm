@@ -117,7 +117,7 @@ package BBS.ANSI is
    green   : constant String := csi & chBold & ";" & fgGreen & chMode;
    yellow  : constant String := csi & chBold & ";" & fgYellow & chMode;
    cyan    : constant String := csi & chBold & ";" & fgCyan & chMode;
-   Magenta : constant String := csi & chBold & ";" & fgMagenta & chMode;
+   magenta : constant String := csi & chBold & ";" & fgMagenta & chMode;
    white   : constant String := csi & chBold & ";" & fgWhite & chMode;
    --
    --  Reset formatting
@@ -136,7 +136,7 @@ package BBS.ANSI is
    --
    reqAttr : constant String := csi & "0c";
    --
-   --  Functions and proceedures.
+   --  Functions and procedures.
    --  The functions generally use strings that can be put to the terminal or saved
    --  for later use.
    --
