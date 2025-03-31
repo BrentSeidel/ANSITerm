@@ -4,6 +4,8 @@ version = "0.1.0"
 
 long-description="""
 Constants, functions, and procedures for generating ANSI escape sequences.
+If you need something that provides more than this, you should take a look
+at one of the curses/ncurses variants.
 Refer to the documentation for more information.
 """
 

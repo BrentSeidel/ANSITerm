@@ -1,10 +1,10 @@
 with "../BBS-Ada/bbs.gpr";
 
-library project Ansiterm_noalr is
+library project bbs_ansiterm_noalr is
     for Languages use ("Ada");
-    for Library_Name use "Ansiterm";
+    for Library_Name use "bbs_ansiterm";
     for Source_Dirs use ("src");
     for Object_Dir use "obj";
     for Library_Dir use "lib";
     for Library_Kind use "Static";
-end Ansiterm_noalr;
+end bbs_ansiterm_noalr;

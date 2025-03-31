@@ -1,4 +1,4 @@
-with "../ansiterm_noalr.gpr";
+with "../bbs_ansiterm_noalr.gpr";
 
 project Test is
 
