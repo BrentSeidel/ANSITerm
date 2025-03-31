@@ -129,19 +129,24 @@ package body BBS.ANSI is
       begin
          s := Ada.Strings.Unbounded.To_Unbounded_String(t);
       end;
-      if (Ada.Strings.Unbounded.Slice(s, 1, 2) = ">[") and
-        (Ada.Strings.Unbounded.Slice(s, Ada.Strings.Unbounded.Length(s), Ada.Strings.Unbounded.Length(s)) = "R") then
-         s := Ada.Strings.Unbounded.Unbounded_Slice(s, 3, Ada.Strings.Unbounded.Length(s) - 1);
-         l := Ada.Strings.Unbounded.Length(s);
-         i := Ada.Strings.Unbounded.Index(s, ";");
-         declare
-            r : constant String := Ada.Strings.Unbounded.Slice(s, 1, i - 1);
-            c : constant String := Ada.Strings.Unbounded.Slice(s, i + 1, l);
-         begin
-            rows := Natural'Value(r);
-            cols := Natural'Value(c);
-         end;
-      Ada.Text_IO.Put(posCursor(rows,1));
+      if Ada.Strings.Unbounded.Length(s) > 0 then
+         if (Ada.Strings.Unbounded.Slice(s, 1, 2) = ">[") and
+           (Ada.Strings.Unbounded.Slice(s, Ada.Strings.Unbounded.Length(s), Ada.Strings.Unbounded.Length(s)) = "R") then
+            s := Ada.Strings.Unbounded.Unbounded_Slice(s, 3, Ada.Strings.Unbounded.Length(s) - 1);
+            l := Ada.Strings.Unbounded.Length(s);
+            i := Ada.Strings.Unbounded.Index(s, ";");
+            declare
+               r : constant String := Ada.Strings.Unbounded.Slice(s, 1, i - 1);
+               c : constant String := Ada.Strings.Unbounded.Slice(s, i + 1, l);
+            begin
+               rows := Natural'Value(r);
+               cols := Natural'Value(c);
+            end;
+            Ada.Text_IO.Put(posCursor(rows,1));
+         else
+            rows := 0;
+            cols := 0;
+         end if;
       else
          rows := 0;
          cols := 0;
@@ -194,6 +199,9 @@ package body BBS.ANSI is
    begin
       Ada.Text_IO.Put(pda);
       s := Ada.Strings.Unbounded.To_Unbounded_String(getCharOrEscape(1.0));
+      if Ada.Strings.Unbounded.Length(s) = 0 then
+         return unknown;
+      end if;
       if (Ada.Strings.Unbounded.Slice(s, 1, 3) = ">[?") and
         (Ada.Strings.Unbounded.Slice(s, Ada.Strings.Unbounded.Length(s), Ada.Strings.Unbounded.Length(s)) = "c") then
          s := Ada.Strings.Unbounded.Unbounded_Slice(s, 4, Ada.Strings.Unbounded.Length(s) - 1);
