@@ -255,7 +255,6 @@ package body BBS.ANSI is
          r : constant String := Ada.Strings.Unbounded.Slice(s, 1, i - 1);
          c : constant String := Ada.Strings.Unbounded.Slice(s, i + 1, l);
       begin
---         Ada.Text_IO.Put_Line("Secondary terminal type code <" & r & ">");
          if r = "0" then
             return VT100;  --  Probably can't happen
          elsif r = "1" then
